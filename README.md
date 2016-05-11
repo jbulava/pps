@@ -6,7 +6,7 @@ This PHP project was created using the Slim Framework 3 Skeleton Application. Re
 ## Configuration
 Before the application can run, you will need to set up your configuration file. Copy 'config.sample.json' and rename it to 'config.json'.  You can get your Twitter credentials by going to apps.twitter.com and creating an application if you haven't done so already.
 
-## Getting an Instagram access key
+## Getting an Instagram access key (ignore for now)
 Source: http://dmolsen.com/2013/04/05/generating-access-tokens-for-instagram/
 
 Go here in your browser (replacing client_id)
