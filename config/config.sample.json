@@ -1,0 +1,19 @@
+{
+  "twitter": {
+    "consumer_key": "",
+    "consumer_secret": "",
+    "access_token": "",
+    "access_secret": ""
+  },
+  "instagram": {
+    "username": "",
+    "client_id": "",
+    "client_secret": ""
+  },
+  "database": {
+    "server": "",
+    "user": "",
+    "pass": "",
+    "database": ""
+  }
+}

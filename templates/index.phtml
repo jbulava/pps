@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title><?= strtoupper(htmlspecialchars($_title)); ?></title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
+        <link rel="stylesheet" type="text/css" media="all" href="css/animations.css">
+
+        <?php if (isset($_style) && $_style == 'fade-in') : ?>
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in.css" />
+        <?php elseif (isset($_style) && $_style == 'fade-in-out') : ?>
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in.css" />
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in-out.css" />
+        <?php endif; ?>
+
+        <script type="text/javascript" src="js/clock.js"></script>
+    </head>
+    <body>
+        <ul id="streams">
+        <?php if (isset($_categories)) : ?>
+            <?php foreach ($_categories as $category) : ?>
+            <li><a href="<?= htmlspecialchars($category['url']) ?>"><?= htmlspecialchars($category['name1']) ?></a></li>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </body>
+</html>

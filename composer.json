@@ -1,0 +1,30 @@
+{
+    "name": "o-r-g/pps",
+    "description": "Public, Private, Secret",
+    "keywords": ["privacy","twitter","instagram"],
+    "homepage": "https://github.com/O-R-G/pps",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lily Healey",
+            "email": "lily@lilyhealey.co.uk"
+        },
+        {
+            "name": "David Reinfurt",
+            "email": "reinfurt@o-r-g.com"
+        },
+        {
+            "name": "Jon Bulava",
+            "email": "jbulava@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "slim/slim": "^3.1",
+        "slim/php-view": "^2.0",
+        "monolog/monolog": "^1.17",
+        "cosenary/instagram":"^2.3",
+        "davidepastore/slim-config":"^0.1.0",
+        "abraham/twitteroauth":"^0.6.4"
+    }
+}

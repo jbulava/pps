@@ -1,0 +1,148 @@
+<html>
+    <head>
+        <title><?= strtoupper(htmlspecialchars($_title)); ?></title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
+        <link rel="stylesheet" type="text/css" media="all" href="css/animations.css">
+
+        <?php if (isset($_style) && $_style == 'fade-in') : ?>
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in.css" />
+        <?php elseif (isset($_style) && $_style == 'fade-in-out') : ?>
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in.css" />
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in-out.css" />
+        <?php endif; ?>
+    </head>
+    <body>
+
+		<script type="text/javascript" src="js/clock.js"></script>
+		<div id="clock-container">
+		    <canvas id="clock-canvas"></canvas>
+		</div>
+		<audio id="pop">
+		    <source src="media/mp3/pop.mp3" type="audio/mpeg">
+		</audio>
+		<script>
+		    var canvas_id, size, colours;
+		    canvas_id = "clock-canvas";
+		    size = "small";
+		    colours = {};
+		    colours.bg = 'rgba(255, 255, 255, 0.0)';
+		    colours.h = '#FFF';
+		    colours.m = '#FFF';
+		    colours.s = '#FFF';
+		    colours.circle = '#FFF';
+		    colours.circleopen = '#FFF';
+
+		    init_clock(canvas_id);
+		</script>
+
+		<header><?= strtoupper(htmlspecialchars($_category['name1'])); ?></header>
+
+		<section id="tweets">
+
+		<?php if ($_tweets) : ?>
+			<?php foreach ($_tweets as $tweet_key => $tweet) : ?>
+
+				<?php $_timestamps[] = $tweet['created_at']; ?>
+
+				<?php if ($_category['url'] != 'computer-vision-exhibitionist') : ?>
+				<figure class="animated tweet fadeIn hidden">
+					<div class="text"><?= htmlspecialchars($tweet['tweet_text']) ?></div>
+				    <div class="metadata">
+				        <span class="user-handle"><?= htmlspecialchars($tweet['screen_name']) ?></span>
+				    </div>
+				</figure>
+				<?php endif; ?>
+
+				<?php if (isset($tweet['media'])) : ?>
+
+					<?php foreach ($tweet['media'] as $media_key => $media) : ?>
+
+						<?php $_timestamps[] = $tweet['created_at']; ?>
+
+						<figure class="animated tweet fadeIn hidden">
+					        <div class="media">
+					        	<?php if ($media['type'] == 'image') : ?>
+					        		<img src="<?= htmlspecialchars($media['url']) ?>"/>
+					        	<?php elseif ($media['type'] == 'video') : ?>
+					        		<video autoplay loop muted>
+										<source src="<?= htmlspecialchars($media['url']) ?>" type="<?= htmlspecialchars($media['content_type']) ?>">
+									</video>
+					        	<?php endif; ?>
+					        </div>
+					        <div class="metadata">
+					            <span class="user-handle"><?= htmlspecialchars($tweet['screen_name']) ?></span>
+					        </div>
+					    </figure>
+
+					<?php endforeach; ?>
+
+				<?php endif; ?>
+
+			<?php endforeach; ?>
+		<?php endif; ?>
+
+		</section>
+
+		<script>
+		    var dtstrings = <?= json_encode($_timestamps) ?>;
+		    var dts = [];
+		    for (var i = 0; i < dtstrings.length; i++) {
+		        dts.push(new Date(dtstrings[i]));
+		    }
+		</script>
+
+		<script type="text/javascript" src="js/tweets.js"></script>
+		<script type="text/javascript" src="js/tweets-ajax.js"></script>
+
+		<script type="text/javascript">
+		    var tweets = document.getElementsByClassName("tweet");
+		    var index = 0;
+		    var tweet_duration = 15000;
+		    var tweet_interval;
+		    var ajax_duration = 1000;
+		    var ajax_interval;
+
+		    var animation_style = "<?= htmlspecialchars($_style) ?>"; 
+		    
+		    // TODO: make this an array
+		    var info = {}
+		    info["plain"] = {
+		        delay: 50,
+		        use_spans: false,
+		        class_func: undefined,
+		        animate_func: undefined
+		    }
+		    info["fade-in-out"] = {
+		        delay: 50,
+		        use_spans: false,
+		        class_func: undefined,
+		        animate_func: undefined
+		    }
+		    info["in-order"] = {
+		        delay: 75,
+		        use_spans: true,
+		        class_func: in_order_classes,
+		        animate_func: in_order_animate
+		    }
+		    info["alphabetical"] = {
+		        delay: 200,
+		        use_spans: true,
+		        class_func: alphabetical_classes,
+		        animate_func: alphabetical_animate
+		    }
+		    info["random"] = {
+		        delay: 10,
+		        use_spans: true,
+		        class_func: random_classes,
+		        animate_func: random_animate
+		    }
+		    init_animation();
+		</script>
+
+		<div id="twitter-bird-container">
+		    <object data="media/twitter-bird.svg"></object>
+		</div>
+
+    </body>
+</html>

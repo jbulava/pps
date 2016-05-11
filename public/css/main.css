@@ -1,0 +1,135 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: #44444b;
+}
+
+body {
+    width: 960px;
+    height: 960px;
+    margin: 0px;
+    font-family: helvetica, arial, sans-serif;
+    background-color: black;
+    color: white;
+}
+
+header {
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+    padding: 40px;
+    font-size: 28px;
+    text-align: center; 
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.tweet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    
+    -webkit-animation-duration:14s;
+    animation-duration: 14s;
+}
+
+.tweet .time {
+    font-family: "Andale Mono";
+    font-size: 14px;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+}
+
+
+.tweet .text {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    padding: 20px;
+    padding-top: 100px;
+    font-size: 80px;
+    line-height: 90px;
+}
+
+#clock-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 20px;
+    z-index: 1;
+}
+
+#clock-container.large{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    background-color: black;
+    z-index: 11;
+}
+
+#twitter-bird-container {
+    width: 10vw;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.user-handle::before {
+    content: "@";
+}
+.user-handle {
+    font-size: 28px;
+}
+
+.metadata {
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 7vw;
+}
+.media {
+    width: 100%;
+    height: 100%;
+}
+
+.media img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+/* main page stuff */
+a:link,
+a:visited {
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 28px;
+}
+
+a:hover {
+    color: red;
+}
+
+ul#streams {
+    margin: 0px;
+    padding: 20px;
+    list-style-type: none;
+}

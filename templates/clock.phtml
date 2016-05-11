@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title><?= strtoupper(htmlspecialchars($_title)); ?></title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
+        <link rel="stylesheet" type="text/css" media="all" href="css/animations.css">
+
+        <?php if (isset($_style) && $_style == 'fade-in') : ?>
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in.css" />
+        <?php elseif (isset($_style) && $_style == 'fade-in-out') : ?>
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in.css" />
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in-out.css" />
+        <?php endif; ?>
+
+        <script type="text/javascript" src="js/clock.js"></script>
+    </head>
+    <body>
+        <div id="clock-container-big">
+            <canvas id="clock-canvas"></canvas>
+        </div>
+
+        <script>
+            var canvas_id, size, colours;
+            canvas_id = "clock-canvas";
+            size = "large";
+            colours = {};
+            colours.bg = 'rgba(255, 255, 255, 0.0)';
+            colours.h = '#FF5722';
+            colours.m = '#FF5722';
+            colours.s = '#FF5722';
+            colours.circle = '#FF5722';
+            colours.circleopen = '#FF5722';
+                
+            init_clock(canvas_id);
+        </script>
+
+        <div id="twitter-bird-container">
+            <object data="media/twitter-bird.svg"></object>
+        </div>
+    </body>
+</html>
