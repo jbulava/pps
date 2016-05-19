@@ -21,5 +21,5 @@ $container['logger'] = function ($c) {
 // config
 $container['config'] = function () {
 	//Create the configuration
-	return new \DavidePastore\Slim\Config\Config('config/config.json');
+	return new \DavidePastore\Slim\Config\Config(__DIR__ . '/../config/config.json');
 };
