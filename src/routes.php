@@ -12,7 +12,7 @@ $app->get('/', function ($request, $response) {
 
     // Get config and setup database
     $config = $this->config->getConfig();
-    require_once('lib/database.php');
+    require_once(__DIR__ . 'lib/database.php');
     $db = new Database($config->get('database'));
 
     // Get categories
@@ -51,7 +51,7 @@ $app->get('/update', function ($request, $response) {
     $config = $this->config->getConfig();
 
     // Make database connection
-    require_once('lib/database.php');
+    require_once(__DIR__ . 'lib/database.php');
     $db = new Database($config->get('database'));
 
     // Get new Tweets
@@ -110,7 +110,7 @@ $app->get('/{url}', function ($request, $response) {
 
     // Get config and setup database
     $config = $this->config->getConfig();
-    require_once('lib/database.php');
+    require_once(__DIR__ . 'lib/database.php');
     $db = new Database($config->get('database'));
 
     // Get category from database
