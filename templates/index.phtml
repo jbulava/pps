@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title><?= strtoupper(htmlspecialchars($_title)); ?></title>
+        <title><?php if (isset($_title) : strtoupper(htmlspecialchars($_title)); endif; ?></title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
         <link rel="stylesheet" type="text/css" media="all" href="css/animations.css">
