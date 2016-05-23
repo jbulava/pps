@@ -65,23 +65,23 @@ $app->get('/update', function ($request, $response) {
     // Get Catgeories
     $categories = $db->getCategories();
 
-    // TODO: do this for every category, not just the first
-    // TODO: increase counter
-    $search = $connection->get("search/tweets", ["q" => $categories[0]['deck'], "count" => 2]);
+    if ($categories) {
+        //$category = $categories[4]; // temp for test
+        foreach ($categories as $category) {
+            
+            $search = $connection->get("search/tweets", ["q" => $category['deck'], "count" => 50]);
 
-    if ($connection->getLastHttpCode() != 200) {
-        return $this->renderer->render($response, 'update.phtml', ['_message' => 'Connection error']);
-    }
+            if ($connection->getLastHttpCode() != 200) {
+                return $this->renderer->render($response, 'update.phtml', ['_message' => 'Connection error']);
+            }
 
-    $log_message += '[Got Tweets]';
-
-    print_r('<pre>');
-    //print_r($search);
-    print_r('</pre>');
-
-    // Save the Tweets
-    if (isset($search->statuses)) {
-        $db->saveTweets($categories[0]['id'], $search->statuses);
+            // Save the Tweets
+            if (isset($search->statuses)) {
+                $db->saveTweets($category['id'], $search->statuses);
+                $log_message += '[Got Tweets: '.$category['id'].']';
+            }
+        }
+        
     }
 
     // Get new Instagram images

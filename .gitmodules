@@ -1,0 +1,3 @@
+[submodule "OPEN-RECORDS-GENERATOR"]
+	path = OPEN-RECORDS-GENERATOR
+	url = https://github.com/reinfurt/OPEN-RECORDS-GENERATOR.git

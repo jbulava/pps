@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `tweets` (
 -- Simplified schema based on http://140dev.com/free-twitter-api-source-code-library/twitter-database-server/mysql-database-schema/
 
 CREATE TABLE IF NOT EXISTS `tweet_media` (
-  `media_id` int(10) unsigned NOT NULL,
+  `media_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `tweet_id` bigint(20) unsigned NOT NULL,
   `type` varchar(255) NOT NULL,
   `content_type` varchar(255),
