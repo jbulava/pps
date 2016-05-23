@@ -31,7 +31,7 @@ class Database {
         if ($this->conn) {
     		try {
         		// Query the database and return an associative array of the results
-            	$result = $this->conn->query("SELECT id, name1, url, deck FROM objects");
+            	$result = $this->conn->query("SELECT id, name1, url, deck FROM objects WHERE active = 1 ORDER BY name1");
     			return $result->fetch_all(MYSQLI_ASSOC);
         	} catch (Exception $e) {}
         }
