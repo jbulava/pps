@@ -21,6 +21,8 @@ var show_hands;
 var reverse = false;
 
 var fr = 100; // frame rate
+var pop;
+var synth, vco, vca;
 
 // set size variables
 function set_size(width, height)
@@ -79,7 +81,22 @@ function init_clock(canvas_id)
 {
     canvas = document.getElementById(canvas_id);
     context = canvas.getContext('2d');
+    pop = document.getElementById("ding");
     
+    /*
+    synth = new AudioContext();
+    
+    vco = synth.createOscillator();
+    vco.type = vco.SINE;
+    vco.frequency.value = 440;
+    vco.start(0);
+    
+    vca = synth.createGain();
+    vca.gain.value = 0;
+    
+    vco.connect(vca);
+    vca.connect(synth.destination);
+    */
     set_size();
     open_clock();
     update_time();
@@ -103,6 +120,8 @@ function open_clock(starttime, endtime)
     {
         st = starttime;
         et = endtime;
+        pop.play();
+        /*vca.gain.value = 1;*/
         hand_timer = window.setInterval(draw_reverse, 1000 / fr);
     }
     else
@@ -133,18 +152,21 @@ function draw(d)
         update_time(d);
         draw_hands();
         
-        if (time.m % 60 == 0 && xyned)
+        if (time.m % 2 == 0 && xyned)
         {
             d1 = new Date();
             d2 = new Date(d1.getTime() - 60 * 60 * 1000);
             close_clock();
+            fill_bg();
             document.getElementById("clock-container").classList.add("large");
             size = "large";
             set_size();
-            open_clock(d1, d2);
-            xyned = false;
+            setTimeout(function() {
+                open_clock(d1, d2);
+                xyned = false;
+            }, 500);
         }
-        else if (time.m % 60 != 0)
+        else if (time.m % 2 != 0)
             xyned = true;
     }
 }
@@ -176,13 +198,22 @@ function draw_reverse()
         if (time.h == eh && time.m <= em)
         {
             close_clock();
-            document.getElementById("clock-container").classList.remove("large");
-            size = "small";
             set_size();
-            open_clock();
-            st = undefined;
-            et = undefined;
-            xyzed = true;
+            update_time(d);
+            draw_hands();
+            setTimeout(function() {
+                fill_bg();
+                setTimeout(function() {
+                    document.getElementById("clock-container").classList.remove("large");
+                    size = "small";
+                    set_size();
+                    open_clock();
+                    st = undefined;
+                    et = undefined;
+                    xyzed = true;
+                    }, 1500);
+                }, 1500);
+            /*vca.gain.value = 0;*/
         }
     }
 }

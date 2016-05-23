@@ -2,6 +2,7 @@
     <head>
         <title><?= strtoupper(htmlspecialchars($_title)); ?></title>
         <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" media="all" href="css/permanent-12.css">
         <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
         <link rel="stylesheet" type="text/css" media="all" href="css/animations.css">
 
@@ -18,8 +19,8 @@
 		<div id="clock-container">
 		    <canvas id="clock-canvas"></canvas>
 		</div>
-		<audio id="pop">
-		    <source src="media/mp3/pop.mp3" type="audio/mpeg">
+		<audio id="ding">
+		    <source src="media/mp3/ding.mp3" type="audio/mpeg">
 		</audio>
 		<script>
 		    var canvas_id, size, colours;
