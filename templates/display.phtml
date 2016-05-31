@@ -12,6 +12,8 @@
         <link rel="stylesheet" type="text/css" media="all" href="css/fade-in.css" />
         <link rel="stylesheet" type="text/css" media="all" href="css/fade-in-out.css" />
         <?php endif; ?>
+
+		<script type="text/javascript" src="js/hls.min.js"></script>
     </head>
     <body>
 
@@ -66,9 +68,27 @@
 					        	<?php if ($media['type'] == 'photo') : ?>
 					        		<img src="<?= htmlspecialchars($media['url']) ?>"/>
 					        	<?php elseif ($media['type'] == 'video') : ?>
-					        		<video autoplay loop muted>
-										<source src="<?= htmlspecialchars($media['url']) ?>" type="<?= htmlspecialchars($media['content_type']) ?>">
-									</video>
+
+									<?php if ($media['content_type'] == 'application/x-mpegURL') : ?>					        		
+										<video class="background-video" id="video<?= htmlspecialchars($media['media_id']) ?>" autoplay loop muted style="width:100%;"></video>
+										<script>
+										  if(Hls.isSupported()) {
+										    var video<?= htmlspecialchars($media['media_id']) ?> = document.getElementById('video<?= htmlspecialchars($media['media_id']) ?>');
+										    var hls = new Hls();
+										    hls.loadSource('<?= htmlspecialchars($media['url']) ?>');
+										    hls.attachMedia(video<?= htmlspecialchars($media['media_id']) ?>);
+										    hls.on(Hls.Events.MANIFEST_PARSED,function() {
+										      video<?= htmlspecialchars($media['media_id']) ?>.play();
+										  });
+										 }
+										</script>
+
+									<?php else : ?>
+						        		<video class="background-video" autoplay loop muted style="width:100%;">
+											<source src="<?= htmlspecialchars($media['url']) ?>" type="<?= htmlspecialchars($media['content_type']) ?>">
+										</video>
+									<?php endif; ?>
+
 					        	<?php endif; ?>
 					        </div>
 					        <div class="metadata">

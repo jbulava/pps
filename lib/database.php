@@ -93,7 +93,7 @@ class Database {
 
             try {
                 // Query the database and return an associative array of the results
-                $result = $this->conn->query("SELECT type, content_type, url FROM tweet_media WHERE tweet_id = $tweet_id");
+                $result = $this->conn->query("SELECT media_id, type, content_type, url FROM tweet_media WHERE tweet_id = $tweet_id");
 
                 if ($result) {
                     return $result->fetch_all(MYSQLI_ASSOC);
@@ -122,64 +122,72 @@ class Database {
                 $this->conn->query("DELETE FROM tweets WHERE object_id = $category_id");
 
                 foreach ($tweets as $tweet) {
+
+                    print_r('<pre>');
+                    //print_r($tweet);
+                    print_r('</pre>');
+
                     // Don't save if possibly sensitive
                     if ($tweet->possibly_sensitive) {
+                        print_r('[removed sensitive] <a href="' . $tweet->entities->media[0]->expanded_url . '" target="_blank">link</a><br /><br />');
                         continue;
                     }
 
                     // Save to database
                     $this->conn->query("INSERT INTO tweets (object_id, tweet_id, tweet_text, created_at, user_id, screen_name, name, profile_image_url) VALUES ($category_id, $tweet->id, '$tweet->text', '".date('Y-m-d H:i:s', strtotime($tweet->created_at))."', ".$tweet->user->id_str.", '".$tweet->user->screen_name."', '".$tweet->user->name."', '".$tweet->user->profile_image_url."')");
 
-                    print_r('<pre>');
-                    print_r($tweet);
-                    print_r('</pre>');
-
-
-
-                    print('[lvl0]');
-
-                    // TODO: Save media if exists under extended_entities
+                    // NOTE: At the current time (5/31/2016), this foreach would never happen
+                    // out of the box since extended entities are NOT returned in Tweets via
+                    // the search endpoint.  Instead, extended_entities are manually being added
+                    // in the update route.
                     if (isset($tweet->extended_entities) && isset($tweet->extended_entities->media)) {
-                        print('[lvl1]');
+
                         foreach ($tweet->extended_entities->media as $media) {
-                            print('[lvl2]');
+                            print('[extended_media]');
                             // save a few variables
                             $content_type = (isset($media->content_type)?$media->content_type:'');
                             $media_url = $media->media_url;
+                            $bitrate = 0;
 
                             // check for video
                             if ($media->type == 'video') {
-                                print('[lvl3]');
-                                // Look through each varient for mp4 of HLS
-                                foreach ($media->video_info->varients as $varient) {
-                                    print('[lvl4]');
-                                    if ($varient->content_type == 'video/mp4') {
-                                        print('[lvl5a]');
-                                        $content_type = 'video/mp4';
-                                        $media_url = $varient->url;
-                                    } else if ($varient->content_type == 'application/x-mpegURL') {
-                                        print('[lvl5b]');
+                                print('[video]');
+                                // Look through each variant for mp4 of HLS
+                                foreach ($media->video_info->variants as $variant) {
+                                    print('['.$variant->content_type.']');
+                                    if ($variant->content_type == 'video/mp4') {
+                                        if ($variant->bitrate > $bitrate) {
+                                            $content_type = 'video/mp4';
+                                            $media_url = $variant->url;
+                                            $bitrate = $variant->bitrate;
+                                        }
+                                    } else if ($variant->content_type == 'application/x-mpegURL') {
                                         $content_type = 'application/x-mpegURL';
-                                        $media_url = $varient->url;
+                                        $media_url = $variant->url;
                                     }
                                 }
                             }
 
+                            print_r(' <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a> <br />');
                             print_r("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '".$content_type."', '".$media_url."')");
+                            print_r('<br /><br />');
 
                             $this->conn->query("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '".$content_type."', '".$media_url."')");
                         }
                     
                     // Else just get it from the 'media' array
                     } elseif (isset($tweet->entities->media)) {
-                        print('[lvlZ]');
+
                         foreach ($tweet->entities->media as $media) {
-                            print('[lvlA]');
+                            print('[media]');
 
                             print_r("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '', '".$media->media_url."')");
+                            print_r('<br /><br />');
 
                             $this->conn->query("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '', '".$media->media_url."')");
                         }
+                    } else {
+                        print_r('[no playable media] <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a><br /><br />');
                     }
                 }
                 

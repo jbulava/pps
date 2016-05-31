@@ -44,8 +44,8 @@ $app->get('/clock', function ($request, $response) {
 $app->get('/update', function ($request, $response) {
     $this->logger->info('Update');
 
-    // Message for log
-    $log_message = null;
+    // Message for log file and printing to screen
+    $log_message = '';
 
     // Get config for credentials
     $config = $this->config->getConfig();
@@ -66,20 +66,60 @@ $app->get('/update', function ($request, $response) {
     $categories = $db->getCategories();
 
     if ($categories) {
-        //$category = $categories[4]; // temp for test
+        $log_message .= sizeof($categories) . ' active categories found.';
+        print_r(sizeof($categories) . ' active categories found.<br /><br />');
+
         foreach ($categories as $category) {
+            print_r('- - - - - - - - - - - - - - -<br />');
+            $log_message .= 'Searching for ' . $category['name1'];
+            print_r('Searching for ' . $category['name1'] . '<br /><br />');
             
-            $search = $connection->get("search/tweets", ["q" => $category['deck'], "count" => 50]);
+            $search = $connection->get("search/tweets", ["q" => $category['deck'], "count" => 10, "include_entities" => true]);
 
             if ($connection->getLastHttpCode() != 200) {
-                return $this->renderer->render($response, 'update.phtml', ['_message' => 'Connection error']);
+                $error = 'Connection error ('.$connection->getLastHttpCode().'): '.json_encode($connection->getLastBody());
+                $log_message .= $error;
+                print_r($error);
+                continue;
             }
 
             // Save the Tweets
             if (isset($search->statuses)) {
+                $log_message .= 'Found '. sizeof($search->statuses) . ' Tweets.';
+                print_r('Found '. sizeof($search->statuses) . ' Tweets.<br /><br />');
+
+                // As of 5/31/2016, Tweets returned via Search do NOT include the extended entities object
+                // and therefore video is missing.  This checks to see if we need the video and will reach
+                // out again if needed to get the assets.
+                foreach ($search->statuses as $key => $tweet) {
+                    if (isset($tweet->entities->media[0]) && strpos($tweet->entities->media[0]->expanded_url, 'video/1') !== false && !$tweet->possibly_sensitive) {
+                        print_r('grabbing video...<br />');
+
+                        $tweet_search = $connection->get("statuses/show", ["id" => $tweet->id_str]);
+                        if ($connection->getLastHttpCode() != 200) {
+                            $error = 'Connection error ('.$connection->getLastHttpCode().'): '.json_encode($connection->getLastBody());
+                            $log_message .= $error;
+                            print_r($error);
+                        } else {
+                            //print_r($tweet_search->extended_entities->media[0]->video_info);
+                            $search->statuses[$key]->extended_entities = $tweet_search->extended_entities;
+                        }
+                    }
+                }
+
                 $db->saveTweets($category['id'], $search->statuses);
-                $log_message += '[Got Tweets: '.$category['id'].']';
             }
+        }
+
+        // Print rate limit
+        $rate_limit_status = $connection->get('application/rate_limit_status');
+        if ($connection->getLastHttpCode() == 200) {
+            $show   = $rate_limit_status->resources->statuses->{'/statuses/show/:id'};
+            $search = $rate_limit_status->resources->search->{'/search/tweets'};
+            print_r('<div id="rate_limits"><h1>RATE LIMITS</h1>');
+            print_r('statuses/show: ' . $show->remaining . ' / ' . $show->limit . ' remaining.<br />');
+            print_r('search/tweets: ' . $search->remaining . ' / ' . $search->limit . ' remaining.<br />');
+            print_r('</div>');
         }
         
     }
@@ -95,7 +135,7 @@ $app->get('/update', function ($request, $response) {
         //file_put_contents('logs/cron.log', $message."\n", FILE_APPEND);
     } catch (Exception $e) {}
 
-    return $this->renderer->render($response, 'update.phtml', ['_message' => $log_message]);
+    return $this->renderer->render($response, 'update.phtml');
 });
 
 /**

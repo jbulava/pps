@@ -1,0 +1,28 @@
+/* CSS just for update page */
+
+html {
+    background-color: rgb(39, 40, 34);
+}
+
+body, h1 {
+    margin: 10px;
+    font-family: "Courier New","Lucida Console";
+    color: rgb(242, 242, 242);
+    font-size: 12px;
+}
+
+h1 {
+	font-weight: bold;
+	color: white;
+	margin: 0px 0px 1em 0px;
+}
+
+a {
+	color: #55acee;
+}
+
+#rate_limits {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+}
