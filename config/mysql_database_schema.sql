@@ -66,7 +66,7 @@ CREATE TABLE `objects` (
   #`end` datetime DEFAULT NULL,
   #`date` datetime DEFAULT NULL,
   #`head` tinytext,
-  `deck` blob,
+  `query` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   #`body` blob,
   #`notes` blob,
   PRIMARY KEY (`id`)

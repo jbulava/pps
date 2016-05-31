@@ -74,7 +74,7 @@ $app->get('/update', function ($request, $response) {
             $log_message .= 'Searching for ' . $category['name1'];
             print_r('Searching for ' . $category['name1'] . '<br /><br />');
             
-            $search = $connection->get("search/tweets", ["q" => $category['deck'], "count" => 10, "include_entities" => true]);
+            $search = $connection->get("search/tweets", ["q" => $category['query'], "count" => 10, "include_entities" => true]);
 
             if ($connection->getLastHttpCode() != 200) {
                 $error = 'Connection error ('.$connection->getLastHttpCode().'): '.json_encode($connection->getLastBody());
