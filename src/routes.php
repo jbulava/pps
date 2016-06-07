@@ -138,6 +138,14 @@ $app->get('/update', function ($request, $response) {
     return $this->renderer->render($response, 'update.phtml');
 });
 
+$app->get('/celebrity-leader-board', function ($request, $response) {
+    $this->logger->info('Leaderboard View');
+    $this->logger->info($request->getAttribute('url'));
+    
+    // Render index view
+    return $this->renderer->render($response, 'board.phtml');
+});
+
 /**
  *
  * Category View
@@ -155,7 +163,21 @@ $app->get('/{url}', function ($request, $response) {
 
     // Get category from database
     $category = $db->getCategory($request->getAttribute('url'));
-
+    
+    // TODO: MAKE THIS BETTER.
+    // should probably be stored in the database, tbh
+    switch ($category['url'])
+    {
+        case "transformations":
+            $category['duration'] = 8;
+            break;
+        case "hotness":
+            $category['duration'] = 4;
+            break;
+        default:
+            $category['duration'] = 14;
+     }   
+    
     // Get Tweets from database
     $tweets = $db->getTweets($category['id']);
 

@@ -4,15 +4,13 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" media="all" href="css/permanent-12.css">
         <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
-        <link rel="stylesheet" type="text/css" media="all" href="css/animations.css">
-
-        <?php if (isset($_style) && $_style == 'fade-in') : ?>
-        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in.css" />
-        <?php elseif (isset($_style) && $_style == 'fade-in-out') : ?>
-        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in.css" />
-        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in-out.css" />
-        <?php endif; ?>
-
+        <link rel="stylesheet" type="text/css" media="all" href="css/fade-in-out.css">
+        <style type="text/css" media="all">
+        .animated {
+            -webkit-animation-duration: <? echo $_category['duration']; ?>s;
+            animation-duration: <? echo $_category['duration']; ?>s;
+        }
+        </style>
 		<script type="text/javascript" src="js/hls.min.js"></script>
     </head>
     <body>
@@ -48,7 +46,9 @@
 
 				<?php $_timestamps[] = $tweet['created_at']; ?>
 
-				<?php if ($_category['url'] != 'computer-vision-exhibitionist') : ?>
+				<?php if ($_category['url'] != 'computer-vision-exhibitionist' &&
+				        $_category['url'] != 'hotness' &&
+				        $_category['url'] != 'transformations') : ?>
 				<figure class="animated tweet fadeIn hidden">
 					<div class="text"><?= htmlspecialchars($tweet['tweet_text']) ?></div>
 				    <div class="metadata">
@@ -112,19 +112,18 @@
 		        dts.push(new Date(dtstrings[i]));
 		    }
 		</script>
-
 		<script type="text/javascript" src="js/tweets.js"></script>
 		<script type="text/javascript" src="js/tweets-ajax.js"></script>
-
 		<script type="text/javascript">
 		    var tweets = document.getElementsByClassName("tweet");
 		    var index = 0;
-		    var tweet_duration = 15000;
+		    var tweet_duration = <? echo $_category['duration']; ?>;
+		    tweet_duration *= 1000;
 		    var tweet_interval;
 		    var ajax_duration = 1000;
 		    var ajax_interval;
 
-		    var animation_style = "<?= htmlspecialchars($_style) ?>"; 
+		    var animation_style = "<?= htmlspecialchars($_style) ?>";
 		    
 		    // TODO: make this an array
 		    var info = {}

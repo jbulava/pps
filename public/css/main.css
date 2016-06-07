@@ -34,9 +34,6 @@ header {
     width: 100%;
     height: 100%;
     margin: 0px;
-    
-    -webkit-animation-duration:14s;
-    animation-duration: 14s;
 }
 
 .tweet .time {
@@ -55,8 +52,8 @@ header {
     left: 0px;
     padding: 20px;
     padding-top: 100px;
-    font-size: 80px;
-    line-height: 90px;
+    font-size: 72px;
+    line-height: 84px;
     
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -142,4 +139,11 @@ ul#streams {
     margin: 0px;
     padding: 20px;
     list-style-type: none;
+}
+
+.animated {
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
 }

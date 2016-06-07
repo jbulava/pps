@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>CELEBRITY LEADER BOARD</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" media="all" href="css/permanent-12.css">
+        <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
+        </style>
+		<script type="text/javascript" src="js/hls.min.js"></script>
+    </head>
+    <body>
+
+		<script type="text/javascript" src="js/clock.js"></script>
+		<div id="clock-container">
+		    <canvas id="clock-canvas"></canvas>
+		</div>
+		<audio id="ding">
+		    <source src="media/mp3/ding.mp3" type="audio/mpeg">
+		</audio>
+		<script>
+		    var canvas_id, size, colours;
+		    canvas_id = "clock-canvas";
+		    size = "small";
+		    colours = {};
+		    colours.bg = 'rgba(255, 255, 255, 0.0)';
+		    colours.h = '#FFF';
+		    colours.m = '#FFF';
+		    colours.s = '#FFF';
+		    colours.circle = '#FFF';
+		    colours.circleopen = '#FFF';
+
+		    init_clock(canvas_id);
+		</script>
+
+        <header>CELEBRITY LEADER BOARD</header>
+		</section>
+
+		<script>
+		    var dtstrings = <?= json_encode($_timestamps) ?>;
+		    var dts = [];
+		    for (var i = 0; i < dtstrings.length; i++) {
+		        dts.push(new Date(dtstrings[i]));
+		    }
+		</script>
+    </body>
+</html>
