@@ -50,13 +50,23 @@ header {
 
 
 .tweet .text {
-    position: fixed;
+/*     position: fixed; */
     top: 0px;
     left: 0px;
     padding: 20px;
     padding-top: 100px;
     font-size: 80px;
     line-height: 90px;
+    
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: au;
+    -webkit-hyphens: auto;
+    hyphens: auto;
 }
 
 #clock-container {

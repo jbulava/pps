@@ -152,10 +152,11 @@ function draw(d)
         update_time(d);
         draw_hands();
         
-        if (time.m % 2 == 0 && xyned)
+        // update reverse frequency here!
+        if (time.m == 0 && xyned)
         {
             d1 = new Date();
-            d2 = new Date(d1.getTime() - 60 * 60 * 1000);
+            d2 = new Date(d1.getTime() - 60 * 61 * 1000);
             close_clock();
             fill_bg();
             document.getElementById("clock-container").classList.add("large");
