@@ -2,6 +2,8 @@
     <head>
         <title><?= strtoupper(htmlspecialchars($_title)); ?></title>
         <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="1800">
+
         <link rel="stylesheet" type="text/css" media="all" href="css/permanent-12.css">
         <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
         <link rel="stylesheet" type="text/css" media="all" href="css/fade-in-out.css">
@@ -118,7 +120,7 @@
 		<script type="text/javascript">
 		    var tweets = document.getElementsByClassName("tweet");
 		    var index = 0;
-		    var tweet_duration = <?php echo $_category['duration']; ?>;
+		    var tweet_duration = <?= $_category['duration'] ?>;
 		    tweet_duration *= 1000;
 		    var tweet_interval;
 		    var ajax_duration = 1000;

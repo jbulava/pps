@@ -120,6 +120,10 @@ $app->get('/update', function ($request, $response) {
             print_r('statuses/show: ' . $show->remaining . ' / ' . $show->limit . ' remaining.<br />');
             print_r('search/tweets: ' . $search->remaining . ' / ' . $search->limit . ' remaining.<br />');
             print_r('</div>');
+
+            // Add limits to log output
+            $this->logger->info('statuses/show: ' . $show->remaining . ' / ' . $show->limit);
+            $this->logger->info('search/tweets: ' . $search->remaining . ' / ' . $search->limit);
         }
         
     }
@@ -162,21 +166,7 @@ $app->get('/{url}', function ($request, $response) {
     $db = new Database($config->get('database'));
 
     // Get category from database
-    $category = $db->getCategory($request->getAttribute('url'));
-    
-    // TODO: MAKE THIS BETTER.
-    // should probably be stored in the database, tbh
-    switch ($category['url'])
-    {
-        case "transformations":
-            $category['duration'] = 8;
-            break;
-        case "hotness":
-            $category['duration'] = 4;
-            break;
-        default:
-            $category['duration'] = 14;
-     }   
+    $category = $db->getCategory($request->getAttribute('url')); 
     
     // Get Tweets from database
     $tweets = $db->getTweets($category['id']);
