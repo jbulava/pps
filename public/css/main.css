@@ -149,7 +149,8 @@ ul#streams {
 }
 
 #board {
-    font-size: 50px;
+    font-size: 72px;
+    line-height: 84px;
     padding: 20px;
     padding-top: 100px;
     width: 100%;
