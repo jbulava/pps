@@ -49,7 +49,7 @@ class Database {
 
     		try {
         		// Query the database and return an associative array of the results
-            	$result = $this->conn->query("SELECT id, name1, url, query FROM objects WHERE url = '$url'");
+            	$result = $this->conn->query("SELECT id, name1, url, duration, query FROM objects WHERE url = '$url'");
 
                 if ($result) {
                     return $result->fetch_array(MYSQLI_ASSOC);
