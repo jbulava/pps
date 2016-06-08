@@ -155,26 +155,26 @@ ul#streams {
     width: 100%;
 }
 
-.trend {
+td.trend {
     text-align: center;
 }
 
-.trend::before {
+td.trend::before {
     content: "-";
 }
 
-.trend.up {
+.up {
     color: green;
 }
 
-.trend.up::before {
+.up td.trend::before {
     content: "↑";
 }
 
-.trend.down {
+.down {
     color: red;
 }
 
-.trend.down::before {
+.down td.trend::before {
     content: "↓";
 }
