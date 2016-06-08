@@ -120,6 +120,10 @@ $app->get('/update', function ($request, $response) {
             print_r('statuses/show: ' . $show->remaining . ' / ' . $show->limit . ' remaining.<br />');
             print_r('search/tweets: ' . $search->remaining . ' / ' . $search->limit . ' remaining.<br />');
             print_r('</div>');
+
+            // Add limits to log output
+            $this->logger->info('statuses/show: ' . $show->remaining . ' / ' . $show->limit);
+            $this->logger->info('search/tweets: ' . $search->remaining . ' / ' . $search->limit);
         }
         
     }
