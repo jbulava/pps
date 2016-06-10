@@ -4,7 +4,7 @@ html {
     background-color: rgb(39, 40, 34);
 }
 
-body, h1 {
+body, h1, table {
     margin: 10px;
     font-family: "Courier New","Lucida Console";
     color: rgb(242, 242, 242);

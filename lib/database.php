@@ -123,7 +123,7 @@ class Database {
 
                 print('<table>');
                 foreach ($tweets as $key => $tweet) {
-                    print(($key%3==1)?'<tr><td>':'<td>');
+                    print(($key%4==1)?'<tr><td>':'<td>');
 
                     // Open bracket for Tweet
                     print_r('[<a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">Tweet</a>: ');
@@ -131,7 +131,7 @@ class Database {
                     // Don't save if possibly sensitive
                     if ($tweet->possibly_sensitive) {
                         print_r('<a href="' . $tweet->entities->media[0]->expanded_url . '" target="_blank">sensitive material removed</a>] ');
-                        print(($key%3==0)?'</td></tr>':'</td>');
+                        print(($key%4==0)?'</td></tr>':'</td>');
                         continue;
                     }
 
@@ -187,7 +187,7 @@ class Database {
                         print_r('non-playable media] ');
                     }
 
-                    print(($key%3==0)?'</td></tr>':'</td>');
+                    print(($key%4==0)?'</td></tr>':'</td>');
                 }
                 print('</table>');
                 
