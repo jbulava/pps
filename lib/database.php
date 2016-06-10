@@ -123,13 +123,12 @@ class Database {
 
                 foreach ($tweets as $tweet) {
 
-                    print_r('<pre>');
-                    //print_r($tweet);
-                    print_r('</pre>');
+                    // Open bracket for Tweet
+                    print_r('[<a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">Tweet</a>: ');
 
                     // Don't save if possibly sensitive
                     if ($tweet->possibly_sensitive) {
-                        print_r('[removed sensitive] <a href="' . $tweet->entities->media[0]->expanded_url . '" target="_blank">link</a><br />');
+                        print_r('<a href="' . $tweet->entities->media[0]->expanded_url . '" target="_blank">sensitive material removed</a>]<br />');
                         continue;
                     }
 
@@ -143,7 +142,6 @@ class Database {
                     if (isset($tweet->extended_entities) && isset($tweet->extended_entities->media)) {
 
                         foreach ($tweet->extended_entities->media as $media) {
-                            print('[extended_media]');
                             // save a few variables
                             $content_type = (isset($media->content_type)?$media->content_type:'');
                             $media_url = $media->media_url;
@@ -151,10 +149,10 @@ class Database {
 
                             // check for video
                             if ($media->type == 'video') {
-                                print('[video]');
+                                print('video ( ');
                                 // Look through each variant for mp4 of HLS
                                 foreach ($media->video_info->variants as $variant) {
-                                    print('['.$variant->content_type.']');
+                                    print($variant->content_type.' ');
                                     if ($variant->content_type == 'video/mp4') {
                                         if ($variant->bitrate > $bitrate) {
                                             $content_type = 'video/mp4';
@@ -166,23 +164,24 @@ class Database {
                                         $media_url = $variant->url;
                                     }
                                 }
+                                print(')]<br />');
                             }
-
-                            print_r(' <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a><br />');
 
                             $this->conn->query("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '".$content_type."', '".$media_url."')");
                         }
                     
                     // Else just get it from the 'media' array
                     } elseif (isset($tweet->entities->media)) {
+                        print('media ( ');
 
                         foreach ($tweet->entities->media as $media) {
-                            print('[media] <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a><br />');
+                            print('<a href="'.$media->media_url.'" target="_blank">link</a> ');
 
                             $this->conn->query("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '', '".$media->media_url."')");
                         }
+                        print(')]<br />');
                     } else {
-                        print_r('[no playable media] <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a><br />');
+                        print_r('<a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">non-playable media</a>]<br />');
                     }
                 }
                 
