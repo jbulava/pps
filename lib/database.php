@@ -179,7 +179,7 @@ class Database {
 
                             $this->conn->query("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '', '".$media->media_url."')");
                         }
-                        print(')]<br />');
+                        print(')] ');
                     } else {
                         print_r('non-playable media] ');
                     }
