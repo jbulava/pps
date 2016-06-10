@@ -128,7 +128,7 @@ class Database {
 
                     // Don't save if possibly sensitive
                     if ($tweet->possibly_sensitive) {
-                        print_r('<a href="' . $tweet->entities->media[0]->expanded_url . '" target="_blank">sensitive material removed</a>]<br />');
+                        print_r('<a href="' . $tweet->entities->media[0]->expanded_url . '" target="_blank">sensitive material removed</a>] ');
                         continue;
                     }
 
@@ -164,7 +164,7 @@ class Database {
                                         $media_url = $variant->url;
                                     }
                                 }
-                                print(')]<br />');
+                                print(')] ');
                             }
 
                             $this->conn->query("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '".$content_type."', '".$media_url."')");
@@ -181,7 +181,7 @@ class Database {
                         }
                         print(')]<br />');
                     } else {
-                        print_r('<a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">non-playable media</a>]<br />');
+                        print_r('non-playable media] ');
                     }
                 }
                 
