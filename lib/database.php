@@ -155,7 +155,6 @@ class Database {
                                 print('video ( ');
                                 // Look through each variant for mp4 of HLS
                                 foreach ($media->video_info->variants as $variant) {
-                                    print($variant->content_type.' ');
                                     if ($variant->content_type == 'video/mp4') {
                                         if ($variant->bitrate > $bitrate) {
                                             $content_type = 'video/mp4';
@@ -167,7 +166,7 @@ class Database {
                                         $media_url = $variant->url;
                                     }
                                 }
-                                print(')] ');
+                                print('<a href="'.$media->media_url.'" target="_blank">'.$content_type.'</a> )] ');
                             }
 
                             $this->conn->query("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '".$content_type."', '".$media_url."')");
