@@ -129,7 +129,7 @@ class Database {
 
                     // Don't save if possibly sensitive
                     if ($tweet->possibly_sensitive) {
-                        print_r('[removed sensitive] <a href="' . $tweet->entities->media[0]->expanded_url . '" target="_blank">link</a><br /><br />');
+                        print_r('[removed sensitive] <a href="' . $tweet->entities->media[0]->expanded_url . '" target="_blank">link</a><br />');
                         continue;
                     }
 
@@ -168,9 +168,7 @@ class Database {
                                 }
                             }
 
-                            print_r(' <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a> <br />');
-                            print_r("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '".$content_type."', '".$media_url."')");
-                            print_r('<br /><br />');
+                            print_r(' <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a><br />');
 
                             $this->conn->query("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '".$content_type."', '".$media_url."')");
                         }
@@ -179,15 +177,12 @@ class Database {
                     } elseif (isset($tweet->entities->media)) {
 
                         foreach ($tweet->entities->media as $media) {
-                            print('[media]');
-
-                            print_r("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '', '".$media->media_url."')");
-                            print_r('<br /><br />');
+                            print('[media] <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a><br />');
 
                             $this->conn->query("INSERT INTO tweet_media (tweet_id, type, content_type, url) VALUES ($tweet->id, '".$media->type."', '', '".$media->media_url."')");
                         }
                     } else {
-                        print_r('[no playable media] <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a><br /><br />');
+                        print_r('[no playable media] <a href="https://twitter.com/pps/status/'.$tweet->id_str.'" target="_blank">link</a><br />');
                     }
                 }
                 

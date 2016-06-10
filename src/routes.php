@@ -37,6 +37,20 @@ $app->get('/clock', function ($request, $response) {
 
 /**
  *
+ * Leaderboard
+ * This view shows the leaderboard app.
+ *
+ */
+$app->get('/celebrity-leader-board', function ($request, $response) {
+    $this->logger->info('Leaderboard View');
+    $this->logger->info($request->getAttribute('url'));
+    
+    // Render index view
+    return $this->renderer->render($response, 'board.phtml');
+});
+
+/**
+ *
  * Update Content
  * This should only be used by the cronjob, not manually.
  *
@@ -72,14 +86,14 @@ $app->get('/update', function ($request, $response) {
         foreach ($categories as $category) {
             print_r('- - - - - - - - - - - - - - -<br />');
             $log_message .= 'Searching for ' . $category['name1'];
-            print_r('Searching for ' . $category['name1'] . '<br /><br />');
+            print_r('Searching for ' . $category['name1'] . '<br />');
             
             $search = $connection->get("search/tweets", ["q" => $category['query'], "count" => 100, "include_entities" => true]);
 
             if ($connection->getLastHttpCode() != 200) {
                 $error = 'Connection error ('.$connection->getLastHttpCode().'): '.json_encode($connection->getLastBody());
                 $log_message .= $error;
-                print_r($error);
+                print_r($error.'<br />');
                 continue;
             }
 
@@ -93,13 +107,13 @@ $app->get('/update', function ($request, $response) {
                 // out again if needed to get the assets.
                 foreach ($search->statuses as $key => $tweet) {
                     if (isset($tweet->entities->media[0]) && strpos($tweet->entities->media[0]->expanded_url, 'video/1') !== false && !$tweet->possibly_sensitive) {
-                        print_r('grabbing video...<br />');
+                        print_r('Grabbing video...<br />');
 
                         $tweet_search = $connection->get("statuses/show", ["id" => $tweet->id_str]);
                         if ($connection->getLastHttpCode() != 200) {
                             $error = 'Connection error ('.$connection->getLastHttpCode().'): '.json_encode($connection->getLastBody());
                             $log_message .= $error;
-                            print_r($error);
+                            print_r($error.'<br />');
                         } else {
                             //print_r($tweet_search->extended_entities->media[0]->video_info);
                             $search->statuses[$key]->extended_entities = $tweet_search->extended_entities;
@@ -140,14 +154,6 @@ $app->get('/update', function ($request, $response) {
     } catch (Exception $e) {}
 
     return $this->renderer->render($response, 'update.phtml');
-});
-
-$app->get('/celebrity-leader-board', function ($request, $response) {
-    $this->logger->info('Leaderboard View');
-    $this->logger->info($request->getAttribute('url'));
-    
-    // Render index view
-    return $this->renderer->render($response, 'board.phtml');
 });
 
 /**
