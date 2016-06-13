@@ -51,12 +51,102 @@ $app->get('/celebrity-leader-board', function ($request, $response) {
 
 /**
  *
+ * Update Leaderboard
+ * This should only be used by the cronjob, not manually.
+ *
+ */
+$app->get('/updateLeaderboard', function ($request, $response) {
+    $this->logger->info('Leaderboard Update');
+
+    // Get config for credentials
+    $config = $this->config->getConfig();
+
+    // Make database connection
+    require_once(__DIR__ . '/../lib/database.php');
+    $db = new Database($config->get('database'));
+
+    // Get Twitter connection
+    $connection = new \Abraham\TwitterOAuth\TwitterOAuth(
+        $config->get('twitter.consumer_key'),
+        $config->get('twitter.consumer_secret'),
+        $config->get('twitter.access_token'), 
+        $config->get('twitter.access_secret')
+    );
+
+    // Get Catgeories
+    $leaderboard = $db->getLeaderboard();
+
+    if ($leaderboard) {
+
+        // Update latest retweet counts
+        print_r('<div id="rank_tweets">');
+        foreach ($leaderboard as $key => $celeb) {
+            $screenname = '@'.str_replace('@', '', $celeb['screenname']);
+
+            $search = $connection->get('search/tweets', ['q' => $screenname.' -filter:retweet -from:'.$screenname, 'count' => 10, 'result_type' => 'recent', 'include_entities' => true]);
+
+            if ($connection->getLastHttpCode() != 200) {
+                $error = 'Connection error ('.$connection->getLastHttpCode().'): '.json_encode($connection->getLastBody());
+                print_r($error.'<br />');
+                continue;
+            }
+
+            $total_retweets = 0;
+
+            // Go through the Tweets
+            print_r('<table><tr rowspan="2"><td>'.$celeb['name'].'</td></tr><tr><td>Retweets</td><td>Tweet</td></tr>');
+            if (isset($search->statuses)) {
+                foreach ($search->statuses as $tweet) {
+                    print_r('<tr><td>'.$tweet->retweet_count.'</td><td>'.$tweet->text.'</td></tr>');
+                    $total_retweets += $tweet->retweet_count;
+                }
+            }
+            print_r('</table>');
+
+            // Update counts in local array
+            $leaderboard[$key]['previous_retweets'] = $leaderboard[$key]['current_retweets'];
+            $leaderboard[$key]['current_retweets'] = $total_retweets;
+        }
+        print_r('</div>');
+
+        // Resort based on new retweet counts
+        $retweets_count = array();
+        foreach ($leaderboard as $key => $celeb) {
+            $retweets_count[$key] = $celeb['current_retweets'];
+        }
+        array_multisort($retweets_count, SORT_DESC, $leaderboard);
+
+        // Update latest ranking in database and print
+        print_r('<div id="rank"><table><tr><td>Rank</td><td>Person</td><td>Popular Retweets</td></tr>');
+        foreach ($leaderboard as $key => $celeb) {
+            // Update database with new retweet count and rank
+            $db->updateLeaderboard($celeb['id'], $total_retweets, $key+1);
+            print_r('<tr><td>'.($key+1).'</td><td>'.$celeb['name'].' (@'.$celeb['screenname'].')</td><td>'.$celeb['current_retweets'].'</tr>');
+        }
+        print_r('</table></div>');
+
+        // Print rate limit
+        $rate_limit_status = $connection->get('application/rate_limit_status');
+        if ($connection->getLastHttpCode() == 200) {
+            $search = $rate_limit_status->resources->search->{'/search/tweets'};
+            print_r('<div id="rate_limits"><h1>RATE LIMITS</h1>');
+            print_r('search/tweets: ' . $search->remaining . ' / ' . $search->limit . ' remaining.<br />');
+            print_r('</div>');
+        }
+    }
+
+    return $this->renderer->render($response, 'update.phtml');
+});
+
+
+/**
+ *
  * Update Content
  * This should only be used by the cronjob, not manually.
  *
  */
 $app->get('/update', function ($request, $response) {
-    $this->logger->info('Update');
+    $this->logger->info('Tweets Update');
 
     // Message for log file and printing to screen
     $log_message = '';
@@ -68,7 +158,7 @@ $app->get('/update', function ($request, $response) {
     require_once(__DIR__ . '/../lib/database.php');
     $db = new Database($config->get('database'));
 
-    // Get new Tweets
+    // Get Twitter connection
     $connection = new \Abraham\TwitterOAuth\TwitterOAuth(
         $config->get('twitter.consumer_key'),
         $config->get('twitter.consumer_secret'),

@@ -27,6 +27,16 @@ class Database {
 		}
     }
 
+    public function getLeaderboard() {
+        if ($this->conn) {
+            try {
+                // Query the database and return an associative array of the results
+                $result = $this->conn->query("SELECT * FROM leaderboard");
+                return $result->fetch_all(MYSQLI_ASSOC);
+            } catch (Exception $e) {}
+        }
+    }
+
     public function getCategories() {
         if ($this->conn) {
     		try {
@@ -102,6 +112,34 @@ class Database {
         }
 
         return null;
+    }
+
+    // Update a leaderboard entry
+    public function updateLeaderboard($celeb_id, $total_retweets, $new_rank) {
+
+        if (!isset($celeb_id) || !isset($total_retweets)) {
+            return false;
+        }
+
+        if ($this->conn) {
+
+            // Escape for the database query
+            $celeb_id = $this->conn->real_escape_string($celeb_id);
+            $total_retweets = $this->conn->real_escape_string($total_retweets);
+            $new_rank = $this->conn->real_escape_string($new_rank);
+
+            try {
+                // Save current_retweets to previous_retweets
+                $update = $this->conn->query("UPDATE leaderboard SET previous_retweets = current_retweets, previous_rank = current_rank WHERE id = $celeb_id");
+
+                // Save new current_retweets
+                if ($update) {
+                    $update = $this->conn->query("UPDATE leaderboard SET current_retweets = $total_retweets, current_rank = $new_rank WHERE id = $celeb_id");
+                }
+            } catch (Exception $e) {
+                print_r($e);
+            }
+        }
     }
 
     // Save new Tweets to the database

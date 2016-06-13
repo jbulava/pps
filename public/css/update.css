@@ -25,4 +25,16 @@ a {
 	position: fixed;
 	top: 10px;
 	right: 10px;
+	background-color: rgb(39, 40, 34);
+}
+
+#rank {
+	position: fixed;
+	top: 0px;
+	background-color: rgb(39, 40, 34);
+	left: 0px;
+}
+
+#rank_tweets {
+	margin-top: 300px;
 }
