@@ -45,8 +45,30 @@ $app->get('/celebrity-leader-board', function ($request, $response) {
     $this->logger->info('Leaderboard View');
     $this->logger->info($request->getAttribute('url'));
     
+    // Get config for credentials
+    $config = $this->config->getConfig();
+
+    // Make database connection
+    require_once(__DIR__ . '/../lib/database.php');
+    $db = new Database($config->get('database'));
+    
+    // Get Catgeories
+    $leaderboard = $db->getLeaderboard();
+    
+    // Resort based on new retweet counts
+    $retweets_count = array();
+    foreach ($leaderboard as $key => $celeb) {
+        $retweets_count[$key] = $celeb['current_rank'];
+    }
+    array_multisort($retweets_count, SORT_ASC, $leaderboard);
+    
+    // View variables
+    $viewVars = [
+        '_leaderboard' => $leaderboard
+    ];
+    
     // Render index view
-    return $this->renderer->render($response, 'board.phtml');
+    return $this->renderer->render($response, 'board.phtml', $viewVars);
 });
 
 /**

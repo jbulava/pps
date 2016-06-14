@@ -46,31 +46,21 @@
 
         <header>CELEBRITY LEADERBOARD</header>
         <table id="board">
-            <tr class="down">
-                <td>@katyperry</td>
-                <td>89M</td>
-                <td class="trend"></td>
-            </tr>
-            <tr>
-                <td>@justinbieber</td>
-                <td>83M</td>
-                <td class="trend"></td>
-            </tr>
-            <tr class="up">
-                <td>@taylorswift13</td>
-                <td>78M</td>
-                <td class="trend"></td>
-            </tr>
-            <tr class="up">
-                <td>@BarackObama</td>
-                <td>75M</td>
-                <td class="trend"></td>
-            </tr> 
-            <tr class="down">
-                <td>@YouTube</td>
-                <td>62M</td>
-                <td class="trend"></td>
-            </tr> 
+        <?php if($_leaderboard): ?>
+            <?php foreach($_leaderboard as $key => $celeb): ?>
+                <?php if($celeb['current_rank'] < $celeb['previous_rank']): ?>
+                <tr class="down">
+                <?php elseif($celeb['current_rank'] > $celeb['previous_rank']): ?>
+                <tr class="up">
+                <?php else: ?>
+                <tr>
+                <?php endif; ?>
+                    <?php $screenname = '@'.str_replace('@', '', $celeb['screenname']); ?>
+                    <td><?= $screenname; ?></td>
+                    <td class="trend"></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
         </table>
 		</section>
 
