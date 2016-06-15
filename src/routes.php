@@ -132,7 +132,7 @@ $app->get('/updateLeaderboard', function ($request, $response) {
         print_r('<div id="rank"><table><tr><td>Rank</td><td>Person</td><td>Popular Retweets</td></tr>');
         foreach ($leaderboard as $key => $celeb) {
             // Update database with new retweet count and rank
-            $db->updateLeaderboard($celeb['id'], $total_retweets, $key+1);
+            $db->updateLeaderboard($celeb['id'], $leaderboard[$key]['current_retweets'], $key+1);
             print_r('<tr><td>'.($key+1).'</td><td>'.$celeb['name'].' (@'.$celeb['screenname'].')</td><td>'.$celeb['current_retweets'].'</tr>');
         }
         print_r('</table></div>');
