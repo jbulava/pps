@@ -31,10 +31,12 @@ class Database {
         if ($this->conn) {
             try {
                 // Query the database and return an associative array of the results
-                $result = $this->conn->query("SELECT * FROM leaderboard");
+                $result = $this->conn->query("SELECT * FROM leaderboard ORDER BY current_rank");
                 return $result->fetch_all(MYSQLI_ASSOC);
             } catch (Exception $e) {}
         }
+
+        return null;
     }
 
     public function getCategories() {

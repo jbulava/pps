@@ -49,14 +49,13 @@
         <?php if($_leaderboard): ?>
             <?php foreach($_leaderboard as $key => $celeb): ?>
                 <?php if($celeb['current_rank'] < $celeb['previous_rank']): ?>
-                <tr class="down">
-                <?php elseif($celeb['current_rank'] > $celeb['previous_rank']): ?>
                 <tr class="up">
+                <?php elseif($celeb['current_rank'] > $celeb['previous_rank']): ?>
+                <tr class="down">
                 <?php else: ?>
                 <tr>
                 <?php endif; ?>
-                    <?php $screenname = '@'.str_replace('@', '', $celeb['screenname']); ?>
-                    <td><?= $screenname; ?></td>
+                    <td><?= '@'.$celeb['screenname'] ?></td>
                     <td class="trend"></td>
                 </tr>
             <?php endforeach; ?>

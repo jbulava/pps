@@ -52,19 +52,9 @@ $app->get('/celebrity-leader-board', function ($request, $response) {
     require_once(__DIR__ . '/../lib/database.php');
     $db = new Database($config->get('database'));
     
-    // Get Catgeories
-    $leaderboard = $db->getLeaderboard();
-    
-    // Resort based on new retweet counts
-    $retweets_count = array();
-    foreach ($leaderboard as $key => $celeb) {
-        $retweets_count[$key] = $celeb['current_rank'];
-    }
-    array_multisort($retweets_count, SORT_ASC, $leaderboard);
-    
     // View variables
     $viewVars = [
-        '_leaderboard' => $leaderboard
+        '_leaderboard' => $db->getLeaderboard()
     ];
     
     // Render index view
