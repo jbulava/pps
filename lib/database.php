@@ -118,7 +118,6 @@ class Database {
 
     // Update a leaderboard entry
     public function updateLeaderboard($celeb_id, $total_retweets, $new_rank) {
-        print_r('update leaderboard: '.$celeb_id.' '.$total_retweets.' '.$new_rank).'<br />';
 
         if (!isset($celeb_id) || !isset($total_retweets)) {
             return false;
