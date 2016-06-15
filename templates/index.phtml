@@ -16,11 +16,15 @@
         <script type="text/javascript" src="js/clock.js"></script>
     </head>
     <body>
-        <ul id="streams">
+        <ul id="streams" class="streams">
         <?php if (isset($_categories)) : ?>
             <?php foreach ($_categories as $category) : ?>
             <li><a href="<?= htmlspecialchars($category['url']) ?>"><?= htmlspecialchars($category['name1']) ?></a></li>
             <?php endforeach; ?>
         <?php endif; ?>
+        </ul>
+        <ul class="streams">
+            <li><a href="/celebrity-leader-board">Celebrity Leader Board</a></li>
+        </ul>
     </body>
 </html>

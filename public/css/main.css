@@ -136,7 +136,7 @@ a:hover {
     color: red;
 }
 
-ul#streams {
+ul.streams {
     margin: 0px;
     padding: 20px;
     list-style-type: none;
