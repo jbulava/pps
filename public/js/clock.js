@@ -83,20 +83,6 @@ function init_clock(canvas_id)
     context = canvas.getContext('2d');
     pop = document.getElementById("ding");
     
-    /*
-    synth = new AudioContext();
-    
-    vco = synth.createOscillator();
-    vco.type = vco.SINE;
-    vco.frequency.value = 440;
-    vco.start(0);
-    
-    vca = synth.createGain();
-    vca.gain.value = 0;
-    
-    vco.connect(vca);
-    vca.connect(synth.destination);
-    */
     set_size();
     open_clock();
     update_time();
@@ -167,7 +153,7 @@ function draw(d)
                 xyned = false;
             }, 500);
         }
-        else if (time.m % 2 != 0)
+        else if (time.m != 0)
             xyned = true;
     }
 }
@@ -186,6 +172,7 @@ function draw_reverse()
         if (xyzed)
         {
             update_time(st);
+            console.log(st);
             xyzed = false;
         }   
         d = reverse_time(time, del);
@@ -316,75 +303,10 @@ function reverse_time(time, delta)
         // time.m = 0;
     }
     if (time.h < 0)
-        time.h += 12;
+        time.h += 24;
     
     return new Date(1991, 01, 25, time.h, time.m, time.s);
 }
-
-/*
-function strike_hour()
-{
-    var tweets, header, container;
-    var id, position, hand_lengths, reverse, pop;
-    
-    window.clearInterval(hand_timer);
-    hand_timer = false;
-    
-    time = 
-    {
-        // this is kind of cheating, amiright?
-        h: now.getHours() - 1,
-        m: 59,
-        s: 59,
-        hs: now.getHours(),
-        ms: 0,
-        ss: 0,
-        delta: - (3600 / (fr * speed))
-    }
-       
-    container = document.getElementById("clock-container");
-    container.id = "clock-container-big";
-    tweets = document.getElementById("tweets");
-    header = document.getElementsByTagName("HEADER")[0];
-    tweets.classList.add("hidden");
-    header.classList.add("hidden");
-    pop = document.getElementById("pop");
-    
-    // this loop needs to be a timeout function
-    pop.play();
-    
-    id = "clock-canvas";
-    position = "centre";
-    hand_lengths = true;
-    reverse = true;
-    
-    init_clock(id, position, hand_lengths, reverse);
-}
-
-function unstrike_hour()
-{
-    var tweets, header, container;
-    container = document.getElementById("clock-container-big");
-    container.id = "clock-container";
-    tweets = document.getElementById("tweets");
-    header = document.getElementsByTagName("HEADER")[0];
-    tweets.classList.remove("hidden");
-    header.classList.remove("hidden");
-    
-    id = "clock-canvas";
-    position = "lower-right";
-    hand_lengths = true;
-    reverse = false;
-    
-    init_clock(id, position, hand_lengths, reverse);
-}
-
-function strike()
-{
-    strike_hour();
-    setTimeout(unstrike_hour, speed * 1000 + 5000);
-}
-*/
 
 function strike()
 {
