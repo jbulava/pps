@@ -43,7 +43,6 @@ $app->get('/clock', function ($request, $response) {
  */
 $app->get('/celebrity-leader-board', function ($request, $response) {
     $this->logger->info('Leaderboard View');
-    $this->logger->info($request->getAttribute('url'));
     
     // Get config for credentials
     $config = $this->config->getConfig();
@@ -160,6 +159,12 @@ $app->get('/updateLeaderboard', function ($request, $response) {
 $app->get('/update', function ($request, $response) {
     $this->logger->info('Tweets Update');
 
+    // Start time for calculating execution time
+    $start_time = time();
+
+    // Get option for bad word matching
+    $check_bad_words = array_key_exists('safe', $request->getQueryParams());
+
     // Message for log file and printing to screen
     $log_message = '';
 
@@ -177,6 +182,13 @@ $app->get('/update', function ($request, $response) {
         $config->get('twitter.access_token'), 
         $config->get('twitter.access_secret')
     );
+
+    // Require Util class and prepare bad words array for bad word list checking
+    if ($check_bad_words) {
+        require_once(__DIR__ . '/../lib/Util.php');
+        $bad_words = json_decode(file_get_contents(__DIR__ . '/../config/badwords.json'), true);
+        print_r('SAFE set in URL; using bad word list for further filtering.<br /><br />');
+    }
 
     // Get Catgeories
     $categories = $db->getCategories();
@@ -208,6 +220,17 @@ $app->get('/update', function ($request, $response) {
                 // and therefore video is missing.  This checks to see if we need the video and will reach
                 // out again if needed to get the assets.
                 foreach ($search->statuses as $key => $tweet) {
+
+                    // Check for bad words, delete Tweet if bad
+                    if ($check_bad_words) {
+                        if ( ($word = Util::contains($tweet->text, $bad_words)) !== false) {
+                            print_r("Tweet removed. Matched on '".$word."'<br />");
+                            unset($search->statuses[$key]);
+                            continue;
+                        }
+                    }
+
+                    // Look for media
                     if (isset($tweet->entities->media[0]) && strpos($tweet->entities->media[0]->expanded_url, 'video/1') !== false && !$tweet->possibly_sensitive) {
                         print_r('Grabbing video...<br />');
 
@@ -227,6 +250,9 @@ $app->get('/update', function ($request, $response) {
             }
         }
 
+        // Print execution time
+        print_r('Total run time: '.(time()-$start_time).'s.');
+
         // Print rate limit
         $rate_limit_status = $connection->get('application/rate_limit_status');
         if ($connection->getLastHttpCode() == 200) {
@@ -241,7 +267,6 @@ $app->get('/update', function ($request, $response) {
             $this->logger->info('statuses/show: ' . $show->remaining . ' / ' . $show->limit);
             $this->logger->info('search/tweets: ' . $search->remaining . ' / ' . $search->limit);
         }
-        
     }
 
     // Get new Instagram images
