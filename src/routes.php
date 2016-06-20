@@ -304,6 +304,10 @@ $app->get('/{url}', function ($request, $response) {
     // Get Tweets from database
     $tweets = $db->getTweets($category['id']);
 
+    // Randomize order of Tweets so the display changes on each load
+    require_once(__DIR__ . '/../lib/Util.php');
+    Util::shuffleArray($tweets);
+
     // Add media to Tweets
     if ($tweets) {
         for ($i=0; $i < sizeof($tweets); $i++) { 

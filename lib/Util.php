@@ -12,4 +12,16 @@ class Util {
     	return false;
 	}
 
+	public static function shuffleArray(&$array) {
+        $keys = array_keys($array);
+        shuffle($keys);
+
+        foreach($keys as $index => $key) {
+            $new[$index] = $array[$key];
+        }
+
+        $array = $new;
+        return true;
+    }
+
 }
